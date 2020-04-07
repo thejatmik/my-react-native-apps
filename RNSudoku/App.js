@@ -1,34 +1,28 @@
-import React, {useState, useEffect} from 'react'
-import { Text, View, Button } from 'react-native'
+import React from 'react'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import { reducers } from './store/reducers'
 import { styles } from './styles'
-import SudokuBoard from './components/SudokuBoard'
+import Game from './screens/Game'
+import Landing from './screens/Landing'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 
 const store = createStore(reducers, applyMiddleware(thunk))
+const Stack = createStackNavigator()
 
 export default function Sudoku() {
-  const [emptyBoard, setGameBoard] = useState([
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0]
-  ])
   // gameBoard jadi kunci jawaban
   // playerBoard buat nampung input
   return (
     <Provider store={ store }>
-      <View style={ styles.mainContainer }>
-        <Text style={ styles.boardTitle }>Go Commit Sudoku</Text>
-        <SudokuBoard emptyBoard={ emptyBoard } />
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Landing" component={Landing} />
+          <Stack.Screen name="Game" component={ Game } />
+        </Stack.Navigator>
+      </NavigationContainer>
     </Provider>
   )
 }

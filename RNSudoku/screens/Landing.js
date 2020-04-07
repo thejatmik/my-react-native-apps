@@ -1,0 +1,39 @@
+import React from 'react'
+import { Text, View, Button, TextInput, Dimensions } from 'react-native'
+import { styles } from '../styles'
+import { useDispatch, useSelector } from 'react-redux'
+
+const screen = Dimensions.get('screen');
+
+function Landing({ navigation }) {
+  const dispatch = useDispatch()
+  const playerName = useSelector(state => state.playerName)
+  function handleOnPress() {
+    // console.log("yok")
+    navigation.navigate('Game')
+  }
+  function handleChangeText(text) {
+    dispatch({
+      type: "SET_PLAYER_NAME",
+      payload: text
+    })
+  }
+  return (
+    <>
+      <View style={[ styles.bgBeige, { flex: 1, justifyContent: 'center', alignItems: 'center' } ]}>
+        <Text style={{ fontSize: 24 }}>Hello, { playerName || 'player'}!</Text>
+        <TextInput
+          style={{ borderWidth: 1, width: screen.width / 2, padding: 10, margin: 5, borderRadius: 10, borderColor: '#aaa' }}
+          maxLength={16}
+          onChangeText={ text => { handleChangeText(text) } }
+        ></TextInput>
+        <Button
+          title="To Game"
+          onPress={ handleOnPress }
+        />
+      </View>
+    </>
+  )
+}
+
+export default Landing;

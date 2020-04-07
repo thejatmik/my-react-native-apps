@@ -21,7 +21,13 @@ const initialState = {
     [0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0]
   ],
-  loading: false
+  screenLoading: false,
+  boardLoading: false,
+  difficulty: 'easy',
+  playerName: '',
+  checkMessage: '',
+  solved: false,
+  finishMessage: {visible: false, message: ''}
 }
 
 export const reducers = (state = initialState, action) => {
@@ -43,10 +49,34 @@ export const reducers = (state = initialState, action) => {
         ]
       }
     }
-    case "SET_LOADING_STATE": {
+    case "SET_SCREEN_LOADING_STATE": {
       return {
         ...state,
-        loading: payload
+        screenLoading: payload
+      }
+    }
+    case "SET_BOARD_LOADING_STATE": {
+      return {
+        ...state,
+        boardLoading: payload
+      }
+    }
+    case "SET_PLAYER_NAME": {
+      return {
+        ...state,
+        playerName: payload
+      }
+    }
+    case "SET_CHECK_MESSAGE": {
+      return {
+        ...state,
+        checkMessage: payload
+      }
+    }
+    case "SET_FINISH_MESSAGE": {
+      return {
+        ...state,
+        finishMessage: payload
       }
     }
     default: {

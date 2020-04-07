@@ -10,6 +10,10 @@ function ColInRow({ rowNum, colNum }) {
   const playerBoard = useSelector(state => state.playerBoard)
 
   function handleOnTextChange(row, col, val) {
+    dispatch({
+      type: "SET_CHECK_MESSAGE",
+      payload: ''
+    })
     if (Number(val) && Number(val) < 10) {
       let newPlayerBoard = [...playerBoard];
       newPlayerBoard[row][col] = Number(val) + 0 || 0;
@@ -20,7 +24,7 @@ function ColInRow({ rowNum, colNum }) {
   return (
     <View style={ [styles.colInRowLine, ( colNum % 3 === 2 ? styles.colBoldLine : styles.colRegularLine )] }>
       <TextInput
-        value={ gameBoard[rowNum][colNum] === 0 ? playerBoard[rowNum][colNum].toString() : gameBoard[rowNum][colNum].toString() }
+        value={ gameBoard[rowNum][colNum] !== 0 ? gameBoard[rowNum][colNum].toString() : playerBoard[rowNum][colNum] ? playerBoard[rowNum][colNum].toString() : '' }
         style={ [ styles.inputCell, (gameBoard[rowNum][colNum] === 0 ? styles.bgWhite : styles.bgMagenta )] }
         maxLength={ 1 }
         selectTextOnFocus
