@@ -1,6 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import { Text, View, StatusBar, StyleSheet, Platform, Dimensions, TextInput, Button } from 'react-native'
 import axios from 'axios'
+import { createStore, applyMiddleware } from 'redux'
+import { Provider, useSelector, useDispatch } from 'react-redux'
+import thunk from 'redux-thunk'
+import { reducers } from './store/reducers'
+import { fetchGameBoard } from './store/actions'
 
 const window = Dimensions.get('window')
 const screen = Dimensions.get('screen')
@@ -9,16 +14,13 @@ const board = {
   height: screen.height - 20
 }
 
-function SudokuBoard({ gameBoard, playerBoard, setPlayerBoard }) {
-  const rows = gameBoard.map((item, index) => {
+function SudokuBoard({ emptyBoard }) {
+  const rows = emptyBoard.map((item, index) => {
     return (
       <Row 
         key={ index }
         line={ item }
         rowNum={ index }
-        gameBoard={ gameBoard }
-        playerBoard={ playerBoard }
-        setPlayerBoard={ setPlayerBoard }
       ></Row>
     )
   })
@@ -28,39 +30,38 @@ function SudokuBoard({ gameBoard, playerBoard, setPlayerBoard }) {
     </View>
   )
 }
-function Row({ line, rowNum, gameBoard, playerBoard, setPlayerBoard }) {
+function Row({ line, rowNum }) {
   const cols = line.map((item, index) => {
     return (
       <ColInRow
         key={ index }
         rowNum={ rowNum }
         colNum={ index }
-        gameBoard={ gameBoard }
-        playerBoard={ playerBoard }
-        setPlayerBoard={ setPlayerBoard }
       />
     )
   })
   return (
-    <View style={[ styles.rowLine, ( rowNum % 3 === 2 ? styles.rowBoldLine : styles.rowRegularLine )]}>
-      { cols }
-    </View>
+    <Provider store={ store }>
+      <View style={[ styles.rowLine, ( rowNum % 3 === 2 ? styles.rowBoldLine : styles.rowRegularLine )]}>
+        { cols }
+      </View>
+    </Provider>
   )
 }
-function ColInRow({ rowNum, colNum, gameBoard, playerBoard, setPlayerBoard }) {
-  // console.log(playerBoard[rowNum][colNum] === gameBoard[rowNum][colNum])
+function ColInRow({ rowNum, colNum }) {
+  const gameBoard = useSelector(state => state.gameBoard)
+  const playerBoard = useSelector(state => state.playerBoard)
   function handleOnTextChange(row, col, val) {
-    // console.log(row, col, playerBoard[row][col], val)
     let newPlayerBoard = [...playerBoard];
     newPlayerBoard[row][col] = Number(val) + 0 || '0';
-    setPlayerBoard(newPlayerBoard)
+    // setPlayerBoard(newPlayerBoard)
     console.log(row, col, playerBoard[row][col], gameBoard[row][col])
   }
   return (
     <View style={ [styles.colInRowLine, ( colNum % 3 === 2 ? styles.colBoldLine : styles.colRegularLine )] }>
       {/* <Text>{ rowNum } { colNum } { boardValue }</Text> */}
       <TextInput
-        value={ gameBoard[rowNum][colNum] === 0 ? playerBoard[rowNum][colNum] : gameBoard[rowNum][colNum].toString() }
+        value={ gameBoard[rowNum][colNum] === 0 ? playerBoard[rowNum][colNum].toString() : gameBoard[rowNum][colNum].toString() }
         style={ [ styles.inputCell, (gameBoard[rowNum][colNum] === 0 ? styles.bgWhite : styles.bgMagenta )] }
         maxLength={ 1 }
         selectTextOnFocus
@@ -71,19 +72,10 @@ function ColInRow({ rowNum, colNum, gameBoard, playerBoard, setPlayerBoard }) {
   )
 }
 
+const store = createStore(reducers, applyMiddleware(thunk))
 export default function Sudoku() {
-  const [gameBoard, setGameBoard] = useState([
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0]
-  ])
-  const [playerBoard, setPlayerBoard] = useState([
+  const dispatch = useDispatch()
+  const [emptyBoard, setGameBoard] = useState([
     [0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0],
@@ -95,28 +87,22 @@ export default function Sudoku() {
     [0,0,0,0,0,0,0,0,0]
   ])
   useEffect(() => {
-    axios({
-      url: `https://sugoku.herokuapp.com/board?difficulty=easy`,
-      method: 'GET'
-    })
-      .then(({data}) => {
-        setGameBoard(data.board)
-        // setPlayerBoard([...data.board])
-      })
-      .catch(console.log)
+    dispatch(fetchGameBoard())
   }, [])
   // gameBoard jadi kunci jawaban
   // playerBoard buat nampung input
   return (
-    <View style={ styles.mainContainer }>
-      <Text style={ styles.boardTitle }>Go Commit Sudoku</Text>
-      <SudokuBoard setPlayerBoard={ setPlayerBoard } gameBoard={ gameBoard } playerBoard={ playerBoard } />
-      <Button
-        // onPress={}
-        title="Press Me"
-        color="#841584"
-      />
-    </View>
+    <Provider store={ store }>
+      <View style={ styles.mainContainer }>
+        <Text style={ styles.boardTitle }>Go Commit Sudoku</Text>
+        <SudokuBoard emptyBoard={ emptyBoard } />
+        <Button
+          // onPress={}
+          title="Press Me"
+          color="#841584"
+        />
+      </View>
+    </Provider>
   )
 }
 
