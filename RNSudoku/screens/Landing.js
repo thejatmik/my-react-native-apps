@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Text, View, Button, TextInput, Dimensions } from 'react-native'
 import { styles } from '../styles'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,6 +7,10 @@ const screen = Dimensions.get('screen');
 
 function Landing({ navigation }) {
   const dispatch = useDispatch()
+  // miliseconds
+  useEffect(() => {
+  }, [])
+
   const playerName = useSelector(state => state.playerName)
   function handleOnPress() {
     // console.log("yok")

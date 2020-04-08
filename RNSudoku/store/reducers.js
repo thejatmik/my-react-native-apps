@@ -28,8 +28,9 @@ const initialState = {
   checkMessage: '',
   solved: false,
   finishMessage: {visible: false, message: ''},
-  timer: {toggle: false, duration: 300},
-  replaying: false
+  timer: {toggle: false, duration: 300, id: 0, started: false},
+  replaying: false,
+  counter: 0
 }
 
 export const reducers = (state = initialState, action) => {
@@ -93,10 +94,48 @@ export const reducers = (state = initialState, action) => {
         replaying: payload
       }
     }
-    case "SET_TIMER": {
+    case "SET_COUNTER": {
       return {
         ...state,
-        time: payload
+        counter: payload
+      }
+    }
+    case "DECREASE_COUNTER": {
+      return {
+        ...state,
+        counter: state.counter - 1
+      }
+    }
+    case "SET_TIMER_DURATION": {
+      return {
+        ...state,
+        timer: { ...state.timer, duration: payload }
+      }
+    }
+    case "TOGGLE_TIMER": {
+      return {
+        ...state,
+        timer: { ...state.timer, toggle: !state.timer.toggle }
+      }
+    }
+    case "SET_TIMER_ID": {
+      window.clearInterval(state.timer.id)
+      return {
+        ...state,
+        timer: { ...state.timer, id: payload }
+      }
+    }
+    case "SET_TIMER_START": {
+      return {
+        ...state,
+        timer: { ...state.timer, started: true }
+      }
+    }
+    case "STOP_TIMER": {
+      window.clearInterval(state.timer.id)
+      return {
+        ...state,
+        timer: { ...state.timer, started: false, id: 0 }
       }
     }
     default: {
