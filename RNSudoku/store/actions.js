@@ -1,4 +1,5 @@
 import axios from 'axios'
+// import { State } from 'react-native-gesture-handler';
 
 const encodeBoard = (board) => {
   return board.reduce((result, row, i) => result + `%5B${encodeURIComponent(row)}%5D${i === board.length -1 ? '' : '%2C'}`, '')
@@ -16,7 +17,7 @@ export const SET_PLAYER_BOARD = (payload) => {
   }
 }
 
-export const fetchGameBoard = (difficulty = 'easy') => {
+export const fetchGameBoard = (difficulty = 'easy', duration = 10) => {
   return (dispatch) => {
     dispatch({
       type: "SET_CHECK_MESSAGE",
@@ -55,6 +56,7 @@ export const fetchGameBoard = (difficulty = 'easy') => {
           type: "SET_SCREEN_LOADING_STATE",
           payload: false
         })
+        dispatch(startCountDown(duration))
       })
   }
 }
@@ -82,6 +84,11 @@ export const checkSolved = (board) => {
           type: "SET_CHECK_MESSAGE",
           payload: data.status
         })
+        if (data.status === 'solved') {
+          dispatch({
+            type: "STOP_TIMER"
+          })
+        }
       })
       .catch(console.log)
       .finally(_ => {
@@ -147,9 +154,36 @@ export const submitBoard = (board) => {
           type: "SET_FINISH_MESSAGE",
           payload: {visible: true, message: data.status}
         })
+        if (data.status === 'solved') {
+          dispatch({
+            type: "STOP_TIMER"
+          })
+        }
       })
       .catch(console.log)
       .finally(_ => {
       })
+  }
+}
+
+export const startCountDown = (duration) => {
+  return (dispatch) => {
+    dispatch({
+      type: "SET_COUNTER",
+      payload: duration
+    })
+    dispatch({
+      type: "SET_TIMER_START"
+    })
+    const clock = setInterval(() => {
+      dispatch({
+        type: "DECREASE_COUNTER"
+      })
+      // console.log(counter)
+    }, 1000)
+    dispatch({
+      type: "SET_TIMER_ID",
+      payload: clock
+    })
   }
 }

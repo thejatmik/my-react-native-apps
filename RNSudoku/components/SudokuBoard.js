@@ -3,7 +3,7 @@ import { View, Button, Text, StatusBar } from 'react-native'
 import Row from './Row'
 import { styles } from '../styles'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchGameBoard, checkSolved, getSolved, submitBoard } from '../store/actions'
+import { fetchGameBoard, checkSolved, getSolved, submitBoard, startCountDown } from '../store/actions'
 import Loading from '../screens/Loading'
 import GameModal from './GameModal'
 
@@ -15,26 +15,59 @@ function SudokuBoard({ emptyBoard, navigation }) {
   const screenLoading = useSelector(state => state.screenLoading)
   const difficulty = useSelector(state => state.difficulty)
   const replaying = useSelector(state => state.replaying)
+  const timer = useSelector(state => state.timer)
+  const counter = useSelector(state => state.counter)
   const dispatch = useDispatch()
   StatusBar.setHidden(true)
+
   useEffect(() => {
     dispatch({
       type: "SET_SCREEN_LOADING_STATE",
       payload: true
     })
-    dispatch(fetchGameBoard(difficulty))
+    dispatch(fetchGameBoard(difficulty, timer.duration))
+    
+    // countdwon 
+    // dispatch({
+    //   type: "SET_COUNTER",
+    //   payload: timer.duration
+    // })
+    // let clock = setInterval(() => {
+    //   let now = new Date().getTime()
+    //   let distance = now - startMS
+    //   dispatch({
+    //     type: "DECREASE_COUNTER"
+    //   })
+    //   console.log(counter)
+    //   if ( distance > timer.duration * 1000 ) {
+    //     clearInterval(clock)
+    //   }
+    // }, 1000)
+    // dispatch(startCountDown(timer.duration))
   }, [dispatch, difficulty])
+
   if (replaying) {
     dispatch({
       type: "SET_SCREEN_LOADING_STATE",
       payload: true
     })
-    dispatch(fetchGameBoard(difficulty))
+    dispatch(fetchGameBoard( difficulty, timer.duration ))
     dispatch({
       type: "SET_REPLAYING",
       payload: false
     })
   }
+  if ( counter === 0 && timer.started ) {
+    // console.log(timer)
+    window.clearInterval(timer.id)
+    dispatch({
+      type: "STOP_TIMER"
+    })
+    if ( timer.toggle ) {
+      dispatch(submitBoard(playerBoard))
+    }
+  }
+
   const rows = emptyBoard.map((item, index) => {
     return (
       <Row 
@@ -44,6 +77,11 @@ function SudokuBoard({ emptyBoard, navigation }) {
       ></Row>
     )
   })
+  const countdown = (
+    <>
+      { timer.toggle ? <Text>{ counter }</Text> : <></> }
+    </>
+  )
 
   function handleSubmit() {
     dispatch(submitBoard(playerBoard))
@@ -64,6 +102,7 @@ function SudokuBoard({ emptyBoard, navigation }) {
       type: "SET_CHECK_MESSAGE",
       payload: ''
     })
+    dispatch(startCountDown(timer.duration))
   }
   function handleCheck() {
     dispatch(checkSolved(playerBoard))
@@ -72,7 +111,7 @@ function SudokuBoard({ emptyBoard, navigation }) {
     dispatch(getSolved((gameBoard)))
   }
   function handleNewBoard() {
-    dispatch(fetchGameBoard())
+    dispatch(fetchGameBoard( difficulty, timer.duration ))
   }
   if (screenLoading) {
     return (
@@ -84,6 +123,9 @@ function SudokuBoard({ emptyBoard, navigation }) {
         <GameModal navigation={ navigation }/>
         <View style={styles.boardContainer}>
           { boardLoading ? <View style={{flex:1,justifyContent:'center',alignItems:'center'}}><Text>Loading</Text></View> : rows }
+        </View>
+        <View>
+          { countdown }
         </View>
         <View style={{flexDirection:'row', paddingTop: 5}}>
           <Button
