@@ -43,7 +43,9 @@ export const fetchGameBoard = (difficulty = 'easy') => {
           payload: newPlayerBoard
         })
       })
-      .catch(console.log)
+      .catch(({ response }) => {
+        console.log(response)
+      })
       .finally(_ => {
         dispatch({
           type: "SET_BOARD_LOADING_STATE",

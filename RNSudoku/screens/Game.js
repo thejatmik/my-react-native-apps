@@ -1,25 +1,41 @@
 import React, { useState } from 'react'
 import { Text, View } from 'react-native'
 import { styles } from '../styles'
-import SudokuBoard from '../components/SudokuBoard'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import GameBoard from '../components/GameBoard'
+import GameSettings from '../components/GameSettings'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+// checkerboard, cogs
+const Tab = createBottomTabNavigator()
 
 function Game() {
-  const [emptyBoard, setGameBoard] = useState([
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0]
-  ])
   return (
-    <View style={ styles.mainContainer }>
-      <Text style={ styles.boardTitle }>Go Commit Sudoku</Text>
-      <SudokuBoard emptyBoard={ emptyBoard } />
-    </View>
+    <>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+            if (route.name === 'Board') {
+              iconName = 'checkerboard'
+            } else if (route.name === 'Settings') {
+              iconName = 'cogs'
+            }
+            return <MaterialCommunityIcons
+              name={iconName}
+              size={size} 
+              color={color}
+            />
+          }
+        })}
+        tabBarOptions={{
+          activeBackgroundColor: 'black',
+          inactiveBackgroundColor: 'white'
+        }}
+      >
+        <Tab.Screen name="Board" component={GameBoard} />
+        <Tab.Screen name="Settings" component={GameSettings} />
+      </Tab.Navigator>
+    </>
   )
 }
 

@@ -8,7 +8,7 @@ const board = {
 export const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    // justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
     ...Platform.select({
       android: {

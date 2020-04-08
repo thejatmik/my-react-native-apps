@@ -8,6 +8,7 @@ import Game from './screens/Game'
 import Landing from './screens/Landing'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import Finish from './screens/Finish'
 
 const store = createStore(reducers, applyMiddleware(thunk))
 const Stack = createStackNavigator()
@@ -20,7 +21,8 @@ export default function Sudoku() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Landing" component={Landing} />
-          <Stack.Screen name="Game" component={ Game } />
+          <Stack.Screen name="Game" component={ Game } options={{ headerShown:false }}/>
+          <Stack.Screen name="Finish" component={ Finish } />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

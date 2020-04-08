@@ -28,7 +28,7 @@ function Landing({ navigation }) {
           onChangeText={ text => { handleChangeText(text) } }
         ></TextInput>
         <Button
-          title="To Game"
+          title="To Sudoku"
           onPress={ handleOnPress }
         />
       </View>

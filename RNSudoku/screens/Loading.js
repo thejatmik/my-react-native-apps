@@ -6,7 +6,7 @@ function Loading() {
   return (
     <>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Loading bang...</Text>
+        <Text style={{fontSize:26}}>Loading bang...</Text>
       </View>
     </>
   )

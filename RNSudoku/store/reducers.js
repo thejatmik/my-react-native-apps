@@ -27,7 +27,9 @@ const initialState = {
   playerName: '',
   checkMessage: '',
   solved: false,
-  finishMessage: {visible: false, message: ''}
+  finishMessage: {visible: false, message: ''},
+  timer: {toggle: false, duration: 300},
+  replaying: false
 }
 
 export const reducers = (state = initialState, action) => {
@@ -77,6 +79,24 @@ export const reducers = (state = initialState, action) => {
       return {
         ...state,
         finishMessage: payload
+      }
+    }
+    case "SET_DIFFICULTY": {
+      return {
+        ...state,
+        difficulty: payload
+      }
+    }
+    case "SET_REPLAYING": {
+      return {
+        ...state,
+        replaying: payload
+      }
+    }
+    case "SET_TIMER": {
+      return {
+        ...state,
+        time: payload
       }
     }
     default: {
