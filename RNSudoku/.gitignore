@@ -12,3 +12,7 @@ web-report/
 
 # macOS
 .DS_Store
+
+.le_note
+
+package-lock.json
