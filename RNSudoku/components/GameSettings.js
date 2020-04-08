@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Text, View, Button } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import RadioForm from 'react-native-simple-radio-button';
+import { styles } from '../styles'
 
 function GameSettings({ navigation }) {
   const dispatch = useDispatch()
@@ -42,26 +43,33 @@ function GameSettings({ navigation }) {
   }
   function handleCancelButton() {
     navigation.navigate("Board")
-    setPromptChange("")
+    // setPromptChange("")
   }
   return (
     <>
-      <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-        <Text>Select Difficulty</Text>
-        <Text> { promptChange }</Text>
-        <RadioForm
-          radio_props={ radioProps }
-          onPress={(value, propsIndex) => { handleRadioProps(propsIndex) }}
-        />
+      <View style={ styles.mainContainer }>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{fontSize: 18, fontWeight: 'bold'}}>Select Difficulty</Text>
+          <Text> { promptChange }</Text>
+          <RadioForm
+            radio_props={ radioProps }
+            onPress={(value, propsIndex) => { handleRadioProps(propsIndex) }}
+          />
+        </View>
         {/* <Text>Toggle Timer</Text> */}
-        <Button
-          title="Save"
-          onPress={ handleSaveButton }
-        />
-        <Button
-          title="Cancel"
-          onPress={ handleCancelButton }
-        />
+        <View style={{ flexDirection: 'row', paddingTop: 5 }}>
+          <Button
+            title="Save"
+            onPress={ handleSaveButton }
+            color="#1a1"
+          />
+          <Text>&nbsp;</Text>
+          <Button
+            title="Cancel"
+            onPress={ handleCancelButton }
+            color="#ba7"
+          />
+        </View>
       </View>
     </>
   )

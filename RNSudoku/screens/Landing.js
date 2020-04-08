@@ -20,12 +20,14 @@ function Landing({ navigation }) {
   }
   return (
     <>
-      <View style={[ styles.bgBeige, { flex: 1, justifyContent: 'center', alignItems: 'center' } ]}>
+      <View style={[ styles.bgBeige, styles.mainContainer ]}>
         <Text style={{ fontSize: 24 }}>Hello, { playerName || 'player'}!</Text>
         <TextInput
           style={{ borderWidth: 1, width: screen.width / 2, padding: 10, margin: 5, borderRadius: 10, borderColor: '#aaa' }}
           maxLength={16}
           onChangeText={ text => { handleChangeText(text) } }
+          placeholder="player"
+          autoFocus={true}
         ></TextInput>
         <Button
           title="To Sudoku"

@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, Button, Modal } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
+import { styles } from '../styles'
 
 function GameModal({ navigation }) {
   // finishMessage: {visible: false, message: ''}
@@ -29,22 +30,35 @@ function GameModal({ navigation }) {
   }
   const buttons = (
     <>
-      <Button
-        title="Close"
-        onPress={ handleCloseModal }
-      />
-      <Button
-        title="Replay New Board"
-        onPress={ handleReplay }
-      />
-      <Button
-        title="Change Settings"
-        onPress={ handleChangeSetting }
-      />
-      <Button
-        title="Finish Game"
-        onPress={ handleFinishGame }
-      />
+      <View style={{ marginBottom: 5 }}>
+        <Button
+          title="Continue To Board"
+          onPress={ handleCloseModal }
+        />
+      </View>
+      <View style={{ marginBottom: 5 }}>
+        <View style={{ marginVertical: 5 }}>
+          <Button
+            title="Replay New Board"
+            onPress={ handleReplay }
+            color="#2b2"
+          />
+        </View>
+        <View style={{ marginVertical: 5 }}>
+          <Button
+            title="Change Settings"
+            onPress={ handleChangeSetting }
+            color="#555"
+          />
+        </View>
+        <View style={{ marginVertical: 5 }}>
+          <Button
+            title="Finish Game"
+            onPress={ handleFinishGame }
+            color="#d22"
+          />
+        </View>
+      </View>
     </>
   )
   const modalMessage = {
@@ -59,7 +73,7 @@ function GameModal({ navigation }) {
         // transparent={true}
         visible={ finishMessage.visible }
       >
-        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+        <View style={ styles.mainContainer }>
           <Text style={{fontSize:26}}>
             { modalMessage[finishMessage.message] || finishMessage.message }
           </Text>

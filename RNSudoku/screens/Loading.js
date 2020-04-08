@@ -5,7 +5,7 @@ import { styles } from '../styles'
 function Loading() {
   return (
     <>
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={ styles.mainContainer }>
         <Text style={{fontSize:26}}>Loading bang...</Text>
       </View>
     </>

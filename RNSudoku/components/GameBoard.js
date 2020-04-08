@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, KeyboardAvoidingView, Platform } from 'react-native'
 import SudokuBoard from './SudokuBoard'
 import { styles } from '../styles'
 import { useSelector } from 'react-redux'
@@ -20,10 +20,15 @@ function GameBoard({ navigation }) {
   const difficultyMessage = String(difficulty).toUpperCase() || ''
   return (
     <>
-      <View style={ styles.mainContainer }>
-        <Text style={ styles.boardTitle }>Go Commit Sudoku - { difficultyMessage }</Text>
-        <SudokuBoard emptyBoard={ emptyBoard } navigation={ navigation }/>
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.Os == "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <View style={ styles.mainContainer }>
+          <Text style={ styles.boardTitle }>Go Commit Sudoku - { difficultyMessage }</Text>
+          <SudokuBoard emptyBoard={ emptyBoard } navigation={ navigation }/>
+        </View>
+      </KeyboardAvoidingView>
     </>
   )
 }

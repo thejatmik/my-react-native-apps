@@ -21,15 +21,22 @@ function ColInRow({ rowNum, colNum }) {
     }
   }
 
+  const inCellValue = 
+    gameBoard[rowNum][colNum] !== 0 ? gameBoard[rowNum][colNum].toString() : 
+    playerBoard[rowNum][colNum] ? playerBoard[rowNum][colNum].toString() : 
+    '';
+  const markBoardStyle = ( gameBoard[rowNum][colNum] === 0 ? styles.bgWhite : styles.bgMagenta )
+  const isEditable = gameBoard[rowNum][colNum] === 0
+
   return (
     <View style={ [styles.colInRowLine, ( colNum % 3 === 2 ? styles.colBoldLine : styles.colRegularLine )] }>
       <TextInput
-        value={ gameBoard[rowNum][colNum] !== 0 ? gameBoard[rowNum][colNum].toString() : playerBoard[rowNum][colNum] ? playerBoard[rowNum][colNum].toString() : '' }
-        style={ [ styles.inputCell, (gameBoard[rowNum][colNum] === 0 ? styles.bgWhite : styles.bgMagenta )] }
+        value={ inCellValue }
+        style={ [ styles.inputCell, markBoardStyle] }
         maxLength={ 1 }
         selectTextOnFocus
         onChangeText={ text => { handleOnTextChange(rowNum, colNum, text) } }
-        editable={ gameBoard[rowNum][colNum] === 0 }
+        editable={ isEditable }
       ></TextInput>
     </View>
   )

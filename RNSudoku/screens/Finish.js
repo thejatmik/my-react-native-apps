@@ -11,7 +11,8 @@ function Finish({ navigation }) {
   return (
     <>
       <View style={ styles.mainContainer }>
-        <Text>Thanks for playing, { playerName || 'player' }!</Text>
+        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Thanks for playing, { playerName || 'player' }!</Text>
+        <Text>&nbsp;</Text>
         <Button
           title="To Landing"
           onPress={ handleToLanding }
